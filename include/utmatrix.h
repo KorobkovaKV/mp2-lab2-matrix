@@ -251,7 +251,7 @@ TMatrix<ValType>::TMatrix(int s): TVector<TVector<ValType> >(s)
 		throw "Error";
 	for (int i = 0; i < Size; i++)
 	{
-		TVector vect(s-i, i);
+		TVector<ValType> vect(s-i, i);
 		pVector[i] = vect;
 	}
 } /*-------------------------------------------------------------------------*/
