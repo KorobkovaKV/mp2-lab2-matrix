@@ -75,7 +75,7 @@ TVector<ValType>::TVector(const TVector<ValType> &v)
 	Size = v.Size;
 	StartIndex = v.StartIndex;
 	pVector = new ValType[Size];
-	for (i = 0; i < Size; i++)
+	for (int i = 0; i < Size; i++)
 		pVector[i] = v.pVector[i];
 } /*-------------------------------------------------------------------------*/
 
@@ -100,7 +100,7 @@ bool TVector<ValType>::operator==(const TVector &v) const
 		return false;						// разный размер
 	else
 	{
-		for (int i = 0; i < v.pVector; i++)
+		for (int i = 0; i < v.Size; i++)
 		{
 			if (pVector[i] != v.pVector[i])
 				return false;						//не равны, если хоть один элемент отличается
@@ -251,14 +251,23 @@ TMatrix<ValType>::TMatrix(int s): TVector<TVector<ValType> >(s)
 		throw "Error";
 	for (int i = 0; i < Size; i++)
 	{
-		TVector vect(s, i);
+		TVector vect(s-i, i);
 		pVector[i] = vect;
 	}
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // конструктор копирования
 TMatrix<ValType>::TMatrix(const TMatrix<ValType> &mt):
-  TVector<TVector<ValType> >(mt) {}
+  TVector<TVector<ValType> >(mt) 
+{
+	Size = mt.Size;
+	StartIndex = mt.StartIndex;
+	pVector = new TVector<ValType>[mt.Size];
+	for (int i = 0; i < mt.Size; i++)
+	{
+		pVector[i] = mt.pVector[i];
+	}
+}
 
 template <class ValType> // конструктор преобразования типа
 TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> > &mt):
@@ -298,7 +307,7 @@ TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType> &mt)
 		delete[] pVector;
 		Size = mt.Size;
 		StartIndex = mt.StartIndex;
-		pVector = new ValType[Size];
+		pVector = new TVector < ValType> [Size];
 		for (int i = 0; i < Size; i++)
 			pVector[i] = mt.pVector[i];
 	}
@@ -312,7 +321,7 @@ TMatrix<ValType> TMatrix<ValType>::operator+(const TMatrix<ValType> &mt)
 		throw "Error";
 	else 
 	{
-		TMatrix matr;
+		TMatrix matr(Size);
 		for (int i = 0; i < Size; i++)
 		{
 			matr.pVector[i] = pVector[i] + mt.pVector[i];
@@ -329,7 +338,7 @@ TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix<ValType> &mt)
 		throw "Error";
 	else
 	{
-		TMatrix matr;
+		TMatrix matr(Size);
 		for (int i = 0; i < Size; i++)
 		{
 			matr.pVector[i] = pVector[i] - mt.pVector[i];
